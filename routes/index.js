@@ -4,5 +4,6 @@ const router = express.Router();
 router.use('/', require('./airports'));
 router.use('/', require('./user'));
 router.use('/', require('./luggage-types'));
+router.use('/', require('./plane-schema'));;
 
 module.exports = router;
