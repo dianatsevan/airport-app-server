@@ -2,8 +2,10 @@
   {
     "id": "1",
     "date": "16, FEB",
-    "startTime": "6.30",
-    "endTime": "8.45",
+    "startTime": "06.30",
+    "endTime": "08.45",
+    "fromCountry": "Albania",
+    "toCountry": "Algeria",
     "price": "125",
     "planeId": 1
   },
@@ -12,6 +14,8 @@
     "date": "16, FEB",
     "startTime": "13.35",
     "endTime": "15.50",
+    "fromCountry": "Albania",
+    "toCountry": "Algeria",
     "price": "150",
     "planeId": 2
   },
@@ -20,6 +24,8 @@
     "date": "16, FEB",
     "startTime": "16.40",
     "endTime": "18.55",
+    "fromCountry": "Albania",
+    "toCountry": "Algeria",
     "price": "115",
     "planeId": 3
   }
