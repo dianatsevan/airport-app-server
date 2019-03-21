@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
-mongoose.connect('mongodb://localhost/');
+mongoose.connect('mongodb://localhost:27017/airport-app', { useNewUrlParser: true });
 
 const app = express();
 
