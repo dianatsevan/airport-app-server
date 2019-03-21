@@ -2,23 +2,16 @@ const Flight = require('../models/flight.model');
 const mongoose = require('mongoose');
 
 exports.addFlight = (req, res) => {
-  const flight = new Flight.FlightSchema({
-    _id: new mongoose.Types.ObjectId,
-    date: req.body.date,
-    startTime: req.body.startTime,
-    endTime: req.body.andTime,
-    fromCountry: req.body.fromCountry,
-    toCountry: req.body.toCountry,
-    price: req.body.price,
-    planeId: req.body.planeId,
-  }).save()
+  const flight = new Flight.FlightSchema(req.body)
+    .save()
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).send(err.message));
 };
 
-exports.getFlights = (req, res, values) => {
-  if (req.query.fromCountry) {
-    Flight.FlightSchema.find({ fromCountry: req.query.fromCountry, toCountry: req.query.toCountry })
+exports.getFlights = (req, res) => {
+  if (req.query.fromCountry&&req.query.toCountry) {
+    const { fromCountry, toCountry } = req.query;
+    Flight.FlightSchema.find({ fromCountry, toCountry })
       .exec()
       .then(flights => res.status(200).json(flights))
       .catch(err => res.status(500).send(err.message));
