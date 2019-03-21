@@ -1,11 +1,27 @@
-const Flight = require('../models/flight.model');
 const mongoose = require('mongoose');
+const Flight = require('../models/flight.model');
+const Airport = require('../models/airport.model');
 
 exports.addFlight = (req, res) => {
-  const flight = new Flight.FlightSchema(req.body)
-    .save()
+  Airport.AirportModel.findById(req.body.fromCountry)
+    .then(airport => {
+      if (!airport) {
+        return res.status(404).json({
+          message: "airport is not found"
+        });
+      }
+      console.log(airport);
+      const flight = new Flight.FlightSchema(req.body);
+      return flight
+        .save()
+    })
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).send(err.message));
+
+  // const flight = new Flight.FlightSchema(req.body)
+  //   .save()
+  //   .then(flight => res.status(200).json(flight))
+  //   .catch(err => res.status(500).send(err.message));
 };
 
 exports.getFlights = (req, res) => {
