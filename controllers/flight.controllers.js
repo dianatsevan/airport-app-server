@@ -1,6 +1,5 @@
 const Flight = require('../models/flight.model');
 const mongoose = require('mongoose');
-const helpers = require('./helpers');
 
 exports.addFlight = (req, res) => {
   const flight = new Flight.FlightSchema({
@@ -37,27 +36,15 @@ exports.updateFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  Flight.FlightSchema.findById(req.params.id, (err, flight) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
 
-    helpers.updateField(req, flight, "date");
-    helpers.updateField(req, flight, "startTime");
-    helpers.updateField(req, flight, "endTime");
-    helpers.updateField(req, flight, "fromCountry");
-    helpers.updateField(req, flight, "toCountry");
-    helpers.updateField(req, flight, "price");
-    helpers.updateField(req, flight, "planeId");
-
-    flight.save(err => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        return res.json(flight);
-      }
-    });
-  })
+  Flight.FlightSchema.update({_id: req.params.id}, { $set: updateOps })
+    .exec()
+    .then(flight => res.status(200).json(flight))
+    .catch(err => res.status(500).json(err.message));
 }
 
 exports.deleteFlight = (req, res) => {
@@ -65,17 +52,8 @@ exports.deleteFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  Flight.FlightSchema.findById(req.params.id, (err, flight) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-
-    flight.remove((err) => {
-      if (err) {
-        return res.status(500).send(err.message);
-      }
-
-      res.status(200).send({});
-    })
-  });
+  Flight.FlightSchema.deleteOne({_id: req.params.id})
+    .exec()
+    .then(() => res.status(200).json('ok'))
+    .catch(err => res.status(500).json(err.message));
 }
