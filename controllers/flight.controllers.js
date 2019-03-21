@@ -9,19 +9,13 @@ exports.addFlight = (req, res) => {
 };
 
 exports.getFlights = (req, res) => {
-  if (req.query.fromCountry&&req.query.toCountry) {
-    const { fromCountry, toCountry } = req.query;
-    Flight.FlightSchema.find({ fromCountry, toCountry })
-      .exec()
-      .then(flights => res.status(200).json(flights))
-      .catch(err => res.status(500).send(err.message));
+  const { fromCountry, toCountry } = req.query;
+  const filter = fromCountry && toCountry ? { fromCountry, toCountry } : {};
 
-  } else {
-    Flight.FlightSchema.find()
-      .exec()
-      .then(flights => res.status(200).json(flights))
-      .catch(err => res.status(500).send(err.message));
-  }
+  Flight.FlightSchema.find(filter)
+    .exec()
+    .then(flights => res.status(200).json(flights))
+    .catch(err => res.status(500).send(err.message));
 }
 
 exports.updateFlight = (req, res) => {
@@ -29,12 +23,7 @@ exports.updateFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  const updateOps = {};
-  for (const ops of req.body) {
-    updateOps[ops.propName] = ops.value;
-  }
-
-  Flight.FlightSchema.update({_id: req.params.id}, { $set: updateOps })
+  Flight.FlightSchema.updateOne({_id: req.params.id}, { $set: req.body })
     .exec()
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).json(err.message));
