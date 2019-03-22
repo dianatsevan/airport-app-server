@@ -10,18 +10,13 @@ exports.addFlight = (req, res) => {
           message: "airport is not found"
         });
       }
-      console.log(airport);
+
       const flight = new Flight.FlightSchema(req.body);
       return flight
         .save()
     })
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).send(err.message));
-
-  // const flight = new Flight.FlightSchema(req.body)
-  //   .save()
-  //   .then(flight => res.status(200).json(flight))
-  //   .catch(err => res.status(500).send(err.message));
 };
 
 exports.getFlights = (req, res) => {
@@ -29,8 +24,24 @@ exports.getFlights = (req, res) => {
   const filter = fromCountry && toCountry ? { fromCountry, toCountry } : {};
 
   Flight.FlightSchema.find(filter)
+    .populate('fromCountry', 'name')
+    .populate('toCountry', 'name')
     .exec()
-    .then(flights => res.status(200).json(flights))
+    .then(result => {
+      const flights = result.map(flight => {
+        const { date, startTime, endTime, price, planeId, fromCountry: {name: fromCountry}, toCountry: { name: toCountry} } = flight;
+        return {
+          date,
+          startTime,
+          endTime,
+          fromCountry,
+          toCountry,
+          price,
+          planeId,
+        }
+      });
+      res.status(200).json(flights);
+    })
     .catch(err => res.status(500).send(err.message));
 }
 
