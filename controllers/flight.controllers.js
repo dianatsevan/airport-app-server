@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Flight = require('../models/flight.model');
 const Airport = require('../models/airport.model');
 
@@ -20,27 +19,19 @@ exports.addFlight = (req, res) => {
 };
 
 exports.getFlights = (req, res) => {
-  const { fromCountry, toCountry } = req.query;
-  const filter = fromCountry && toCountry ? { fromCountry, toCountry } : {};
+  const { fromCountry, toCountry, date } = req.query;
+  const filter = fromCountry && toCountry && date ? { fromCountry, toCountry, date } : {};
 
   Flight.FlightSchema.find(filter)
     .populate('fromCountry', 'name')
     .populate('toCountry', 'name')
     .exec()
     .then(result => {
-      const flights = result.map(flight => {
-        const { date, startTime, endTime, price, planeId, fromCountry: {name: fromCountry}, toCountry: { name: toCountry} } = flight;
-        return {
-          date,
-          startTime,
-          endTime,
-          fromCountry,
-          toCountry,
-          price,
-          planeId,
-        }
-      });
-      res.status(200).json(flights);
+      if (result.length > 0) {
+        return res.status(200).json(result);
+      } else {
+        return res.status(204).json("we don't have any flights for this date");
+      }
     })
     .catch(err => res.status(500).send(err.message));
 }

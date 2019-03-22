@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const FlightSchema = new mongoose.Schema({
-  date: { type: Date, require: true },
+  date: { type: String, require: true },
+  // date: { type: Date, require: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
   fromCountry: { type: mongoose.Schema.Types.ObjectId, ref: 'Airport', required: true},
