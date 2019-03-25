@@ -1,5 +1,6 @@
 const Flight = require('../models/flight.model');
 const Airport = require('../models/airport.model');
+const moment = require('moment');
 
 exports.addFlight = (req, res) => {
   Airport.AirportModel.findById(req.body.fromCountry)
@@ -10,9 +11,8 @@ exports.addFlight = (req, res) => {
         });
       }
 
-      const flight = new Flight.FlightSchema(req.body);
-      return flight
-        .save()
+      const flight = new Flight.FlightModel(req.body);
+      return flight.save();
     })
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).send(err.message));
@@ -20,19 +20,16 @@ exports.addFlight = (req, res) => {
 
 exports.getFlights = (req, res) => {
   const { fromCountry, toCountry, date } = req.query;
-  const filter = fromCountry && toCountry && date ? { fromCountry, toCountry, date } : {};
+  const newDate = new Date(date);
+  const findDate = moment(newDate).format('YYYY-MM-DD');
 
-  Flight.FlightSchema.find(filter)
+  const filter = fromCountry && toCountry && newDate ? { fromCountry, toCountry, date: findDate } : {};
+
+  Flight.FlightModel.find(filter)
     .populate('fromCountry', 'name')
     .populate('toCountry', 'name')
     .exec()
-    .then(result => {
-      if (result.length > 0) {
-        return res.status(200).json(result);
-      } else {
-        return res.status(204).json("we don't have any flights for this date");
-      }
-    })
+    .then(result => res.status(200).json(result))
     .catch(err => res.status(500).send(err.message));
 }
 
@@ -41,7 +38,7 @@ exports.updateFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  Flight.FlightSchema.updateOne({_id: req.params.id}, { $set: req.body })
+  Flight.FlightModel.updateOne({_id: req.params.id}, { $set: req.body })
     .exec()
     .then(flight => res.status(200).json(flight))
     .catch(err => res.status(500).json(err.message));
@@ -52,7 +49,7 @@ exports.deleteFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  Flight.FlightSchema.deleteOne({_id: req.params.id})
+  Flight.FlightModel.deleteOne({_id: req.params.id})
     .exec()
     .then(() => res.status(200).json('ok'))
     .catch(err => res.status(500).json(err.message));
