@@ -5,7 +5,7 @@ const AirportSchema = new mongoose.Schema({
   name: { type: String, required: true }
 });
 
-const Airport = mongoose.model('airports', AirportSchema);
+const Airport = mongoose.model('Airport', AirportSchema);
 
 module.exports = {
   AirportModel: Airport
