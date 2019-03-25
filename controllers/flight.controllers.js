@@ -1,5 +1,6 @@
 const Flight = require('../models/flight.model');
 const Airport = require('../models/airport.model');
+const PlaneLayout = require('../models/plane-layout.model');
 const moment = require('moment');
 
 exports.addFlight = (req, res) => {
@@ -28,6 +29,7 @@ exports.getFlights = (req, res) => {
   Flight.FlightModel.find(filter)
     .populate('fromCountry', 'name')
     .populate('toCountry', 'name')
+    .populate('planeInfo')
     .exec()
     .then(result => res.status(200).json(result))
     .catch(err => res.status(500).send(err.message));

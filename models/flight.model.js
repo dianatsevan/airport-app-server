@@ -7,7 +7,7 @@ const FlightSchema = new mongoose.Schema({
   fromCountry: { type: mongoose.Schema.Types.ObjectId, ref: 'Airport', required: true},
   toCountry: { type: mongoose.Schema.Types.ObjectId, ref: 'Airport', required: true},
   price: { type: Number, required: true },
-  planeId: { type: Number, required: true }
+  planeInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'PlaneLayout', required: true }
 });
 
 const Flight = mongoose.model('Flight', FlightSchema);
