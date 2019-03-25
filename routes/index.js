@@ -5,7 +5,7 @@ router.use('/', require('./airports.routes'));
 
 router.use('/', require('./flights.routes'));
 
-router.use('/', require('./luggage-types'));
+router.use('/', require('./luggage-types.routes'));
 router.use('/', require('./plane-schema'));;
 
 module.exports = router;
