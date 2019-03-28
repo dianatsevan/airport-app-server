@@ -12,4 +12,4 @@ exports.generateToken = (id) => {
 };
 
 const saltRounds = 10;
-exports.generateHash = password => bcrypt.hash(password, saltRounds);
+exports.generateHash = password => bcrypt.hashSync(password, saltRounds);
