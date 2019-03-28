@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 exports.generateToken = (id) => {
   const token = jwt.sign(
@@ -10,3 +11,5 @@ exports.generateToken = (id) => {
   return `bearer ${token}`;
 };
 
+const saltRounds = 10;
+exports.generateHash = password => bcrypt.hash(password, saltRounds);

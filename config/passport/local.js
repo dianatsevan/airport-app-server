@@ -21,7 +21,7 @@ passport.use('local-login', new LocalStrategy(
   },
   async (req, username, password, done) => {
     try {
-      const user = await User.UserModel.findOne({ username: username });
+      const user = await User.UserModel.findOne({username});
 
       if (!user) {
         req.body.message = 'No user found';
@@ -37,7 +37,40 @@ passport.use('local-login', new LocalStrategy(
 
       return done(null, user);
     } catch (error) {
-      done(error, false);
+      return done(error, false);
+    }
+  }
+));
+
+passport.use('local-register', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  async (req, email, password, done) => {
+    try {
+      const user = await User.UserModel.findOne({username: email});
+
+      if (user) {
+        return done(null, false);
+      } else {
+        const newUser = new User.UserModel({
+          ...req.body,
+          username: req.body.email,
+          password: services.generateHash(password)
+        });
+
+        await newUser.save()
+          .then(() => {
+            req.body.token = services.generateToken(newUser._id);
+            req.body.username = newUser.username;
+          })
+          .catch(err => console.log(err));
+
+        return done(null, newUser);
+      }
+    } catch (error) {
+      done(null, error);
     }
   }
 ));
