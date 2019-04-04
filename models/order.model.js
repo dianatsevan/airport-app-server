@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const PassengerInfoSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
   luggagePrice: { type: Number, required: true },
   luggageKg: { type: Number, required: true },
   selectedSeat: { type: String, required: true },

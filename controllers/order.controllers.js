@@ -10,8 +10,8 @@ exports.createOrder = (req, res) => {
 };
 
 exports.getOrders = (req, res) => {
-  const { userId } = req.query;
-  const filter = userId ? { userId } : {};
+  const { selectedFlight } = req.query;
+  const filter = selectedFlight ? { selectedFlight } : {};
 
   Order.OrderModel.find(filter)
     .populate('userId')
