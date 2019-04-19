@@ -21,10 +21,18 @@ exports.addFlight = (req, res) => {
 
 exports.getFlights = (req, res) => {
   const { fromCountry, toCountry, date } = req.query;
-  const newDate = new Date(date);
-  const findDate = moment(newDate).format('YYYY-MM-DD');
+  const findDate = new Date(date);
 
-  const filter = fromCountry && toCountry && newDate ? { fromCountry, toCountry, date: findDate } : {};
+  const filter = fromCountry && toCountry && findDate
+    ? {
+      fromCountry,
+      toCountry,
+      date: {
+        $gt: moment(findDate).add(-1, 'days'),
+        $lte: findDate
+      }
+    }
+    : {};
 
   Flight.FlightModel.find(filter)
     .populate('fromCountry', 'name')

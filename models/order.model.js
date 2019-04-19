@@ -13,8 +13,11 @@ const OrderSchema = new mongoose.Schema({
   fromCountry: { type: String, required: true },
   toCountry: { type: String, required: true },
   departureDate: { type: Date, required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true },
   passengersAmount: { type: Number, required: true },
   selectedFlight: { type: mongoose.Schema.Types.ObjectId, ref: 'Flight', required: true },
+  // planeCode: { type: String, required: true },
   passengersInfo: { type: [PassengerInfoSchema], required: true }
 });
 
