@@ -23,14 +23,15 @@ exports.getFlights = (req, res) => {
   const { fromCountry, toCountry, date } = req.query;
   const findDate = new Date(date);
 
-  const filter = fromCountry && toCountry && findDate
+  // const filter = fromCountry && toCountry && findDate
+  const filter = fromCountry && toCountry 
     ? {
       fromCountry,
       toCountry,
-      date: {
-        $gt: moment(findDate).add(-1, 'days'),
-        $lte: findDate
-      }
+      // date: {
+      //   $gt: moment(findDate).add(-1, 'days'),
+      //   $lte: findDate
+      // }
     }
     : {};
 
