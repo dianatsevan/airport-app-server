@@ -1,7 +1,5 @@
 const Flight = require('../models/flight.model');
 const Airport = require('../models/airport.model');
-const PlaneLayout = require('../models/plane-layout.model');
-const moment = require('moment');
 
 exports.addFlight = (req, res) => {
   Airport.AirportModel.findById(req.body.fromCountry)
@@ -20,18 +18,12 @@ exports.addFlight = (req, res) => {
 };
 
 exports.getFlights = (req, res) => {
-  const { fromCountry, toCountry, date } = req.query;
-  const findDate = new Date(date);
+  const { fromCountry, toCountry } = req.query;
 
-  // const filter = fromCountry && toCountry && findDate
   const filter = fromCountry && toCountry 
     ? {
       fromCountry,
       toCountry,
-      // date: {
-      //   $gt: moment(findDate).add(-1, 'days'),
-      //   $lte: findDate
-      // }
     }
     : {};
 
@@ -42,6 +34,19 @@ exports.getFlights = (req, res) => {
     .exec()
     .then(result => res.status(200).json(result))
     .catch(err => res.status(500).send(err.message));
+}
+
+exports.getFlight = (req, res) => {
+  if (req.params.id === undefined) {
+    return res.status(400).send({});
+  }
+
+  Flight.FlightModel.findOne({_id: req.params.id})
+    .populate('fromCountry', 'name')
+    .populate('toCountry', 'name')
+    .populate('planeInfo')
+    .then(flight => res.status(200).json(flight))
+    .catch(err => res.status(500).json(err.message));
 }
 
 exports.updateFlight = (req, res) => {
