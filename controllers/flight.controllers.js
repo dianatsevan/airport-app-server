@@ -20,12 +20,24 @@ exports.addFlight = (req, res) => {
 exports.getFlights = (req, res) => {
   const { fromCountry, toCountry } = req.query;
 
-  const filter = fromCountry && toCountry 
-    ? {
-      fromCountry,
-      toCountry,
-    }
-    : {};
+  // const filter = fromCountry && toCountry 
+  //   ? {
+  //     fromCountry,
+  //     toCountry,
+  //   }
+  //   : {};
+  let filter = {};
+
+  if (fromCountry && toCountry) {
+    filter = { fromCountry, toCountry };
+  }
+  if (fromCountry) {
+    filter = { fromCountry };
+  }
+  if ( toCountry) {
+    filter = { toCountry };
+  }
+
 
   Flight.FlightModel.find(filter)
     .populate('fromCountry', 'name')

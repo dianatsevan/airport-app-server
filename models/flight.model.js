@@ -8,6 +8,7 @@ const FlightSchema = new mongoose.Schema({
   planeInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'PlaneLayout', required: true },
   schedule: { type: Array, required: true },
   flightPeriod: { type: Object, required: true },
+  flightOrders: { type: Array },
 });
 
 const Flight = mongoose.model('Flight', FlightSchema);
