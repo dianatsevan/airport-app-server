@@ -2,30 +2,23 @@ const Flight = require('../models/flight.model');
 const Airport = require('../models/airport.model');
 
 exports.addFlight = (req, res) => {
-  Airport.AirportModel.findById(req.body.fromCountry)
-    .then(airport => {
-      if (!airport) {
-        return res.status(404).json({
-          message: "airport is not found"
-        });
+  Flight.FlightModel.findOne({ code: req.body.code })
+    .exec()
+    .then(flight => {
+      if (flight) {
+        return res.status(500).send('Code duplication');
       }
 
-      const flight = new Flight.FlightModel(req.body);
-      return flight.save();
+      const newFlight = new Flight.FlightModel(req.body);
+      return newFlight.save();
     })
-    .then(flight => res.status(200).json(flight))
+    .then(newFlight => res.status(200).json(newFlight))
     .catch(err => res.status(500).send(err.message));
 };
 
 exports.getFlights = (req, res) => {
-  const { fromCountry, toCountry } = req.query;
+  const { fromCountry, toCountry, planeInfo } = req.query;
 
-  // const filter = fromCountry && toCountry 
-  //   ? {
-  //     fromCountry,
-  //     toCountry,
-  //   }
-  //   : {};
   let filter = {};
 
   if (fromCountry && toCountry) {
@@ -34,10 +27,12 @@ exports.getFlights = (req, res) => {
   if (fromCountry) {
     filter = { fromCountry };
   }
-  if ( toCountry) {
+  if (toCountry) {
     filter = { toCountry };
   }
-
+  if (planeInfo) {
+    filter = { planeInfo };
+  }
 
   Flight.FlightModel.find(filter)
     .populate('fromCountry', 'name')
@@ -66,9 +61,17 @@ exports.updateFlight = (req, res) => {
     return res.status(400).send({});
   }
 
-  Flight.FlightModel.updateOne({_id: req.params.id}, { $set: req.body })
+  Flight.FlightModel.findOne({ code: req.body.code })
     .exec()
-    .then(flight => res.status(200).json(flight))
+    .then(flight => {
+      if (flight && (flight._id != req.params.id)) {
+        return res.status(500).send('Code duplication');
+      }
+
+      Flight.FlightModel.updateOne({_id: req.params.id}, { $set: req.body })
+        .exec()
+        .then(updatedFlight => res.status(200).json(updatedFlight))
+    })
     .catch(err => res.status(500).json(err.message));
 }
 

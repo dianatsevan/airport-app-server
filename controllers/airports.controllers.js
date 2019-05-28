@@ -2,16 +2,23 @@ const Airport = require("../models/airport.model");
 const Flight = require("../models/flight.model");
 
 exports.addAirport = (req, res) => {
-  console.log(req.body);
   req.body.forEach(elem => {
-  const airport = new Airport.AirportModel(elem)
-    .save()
-    .then(airport => {
-      res.status(200).json(airport);
-      Promise.resolve();
-    })
-    .catch(err => res.status(500).send(err.message));
-  })
+    Airport.AirportModel.findOne({ code: elem.code })
+      .exec()
+      .then(result => {
+        if (result) {
+          return res.status(500).send(`${elem.name} is already in DB`);
+        }
+
+        const airport = new Airport.AirportModel(elem)
+          .save()
+          .then(airport => {
+            res.status(200).json(airport);
+            // Promise.resolve();
+          })
+      })
+      .catch(err => res.status(500).send(err.message));
+  });
 };
 
 exports.getAirports = (req, res) => {
@@ -26,9 +33,17 @@ exports.updateAirport = (req, res) => {
     return res.status(400).send({});
   }
 
-  Airport.AirportModel.updateOne({_id: req.params.id}, { $set: req.body })
+  Airport.AirportModel.findOne({ code: req.body.code })
     .exec()
-    .then(airport => res.status(200).json(airport))
+    .then(result => {
+      if (result && (result._id != req.params.id)) {
+        return res.status(500).send('Code duplication');
+      }
+
+      Airport.AirportModel.updateOne({_id: req.params.id}, { $set: req.body })
+        .exec()
+        .then(airport => res.status(200).json(airport))
+    })
     .catch(err => res.status(500).send(err.message));
 };
 
