@@ -7,5 +7,6 @@ router.use('/', require('./luggage-types.routes'));
 router.use('/', require('./plane-layout.routes'));
 router.use('/', require('./user.routes'));
 router.use('/', require('./order.routes'));
+router.use('/', require('./payment.routes'));
 
 module.exports = router;
