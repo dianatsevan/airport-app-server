@@ -8,5 +8,6 @@ router.post('/user/login', passport.authenticate('local-login', {session: false}
 router.get('/user/logout', UsersController.logOutUser);
 router.post('/user/check-auth', passport.authenticate('jwt', {session: false}), UsersController.checkAuth);
 router.get('/users', UsersController.getUsers);
+router.delete('/user/:id', UsersController.deleteUser);
 
 module.exports = router;

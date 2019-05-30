@@ -9,7 +9,7 @@ const PassengerInfoSchema = new mongoose.Schema({
 });
 
 const OrderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   fromCountry: { type: String, required: true },
   toCountry: { type: String, required: true },
   departureDate: { type: Date, required: true },

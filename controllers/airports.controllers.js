@@ -2,14 +2,20 @@ const Airport = require("../models/airport.model");
 const Flight = require("../models/flight.model");
 
 exports.addAirport = (req, res) => {
-  const airport = new Airport.AirportModel(req.body)
+  console.log(req.body);
+  req.body.forEach(elem => {
+  const airport = new Airport.AirportModel(elem)
     .save()
-    .then(airport => res.status(200).json(airport))
+    .then(airport => {
+      res.status(200).json(airport);
+      Promise.resolve();
+    })
     .catch(err => res.status(500).send(err.message));
+  })
 };
 
 exports.getAirports = (req, res) => {
-  Airport.AirportModel.find()
+  Airport.AirportModel.find({}, null, { sort: { [req.query.orderBy || 'name']: req.query.direction || 1 }})
     .exec()
     .then(airports => res.status(200).json(airports))
     .catch(err => res.status(500).send(err.message));

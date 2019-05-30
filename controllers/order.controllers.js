@@ -24,7 +24,7 @@ exports.getOrders = (req, res) => {
   }
 
   Order.OrderModel.find(filter)
-    .populate('userId')
+    .populate('user')
     .populate('selectedFlight')
     .populate('planeInfo')
     .exec()
