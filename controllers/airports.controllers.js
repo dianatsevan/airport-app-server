@@ -2,23 +2,23 @@ const Airport = require("../models/airport.model");
 const Flight = require("../models/flight.model");
 
 exports.addAirport = (req, res) => {
-  req.body.forEach(elem => {
+  req.body.forEach((elem, index) => {
     Airport.AirportModel.findOne({ code: elem.code })
       .exec()
       .then(result => {
-        if (result) {
-          return res.status(500).send(`${elem.name} is already in DB`);
-        }
-
-        const airport = new Airport.AirportModel(elem)
-          .save()
-          .then(airport => {
-            res.status(200).json(airport);
-            // Promise.resolve();
-          })
+        return res.send(`${elem.name} is already in DB`);
       })
       .catch(err => res.status(500).send(err.message));
   });
+
+  req.body.forEach((elem) => {
+    const airport = new Airport.AirportModel(elem)
+      .save()
+      .then(airport => {
+        res.status(200).json(airport);
+        Promise.resolve();
+      })
+  })
 };
 
 exports.getAirports = (req, res) => {
