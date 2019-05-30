@@ -33,6 +33,11 @@ passport.use('local-login', new LocalStrategy(
         return done(null, false, { message: 'Wrong password'});
       }
 
+      if (user.role !== req.body.role) {
+        req.body.message = `not a ${req.body.role}`;
+        return done(null, false, { message: 'not a user'});
+      }
+
       req.body.token = services.generateToken(user._id);
 
       return done(null, user);
@@ -63,7 +68,7 @@ passport.use('local-register', new LocalStrategy({
         await newUser.save()
           .then(() => {
             req.body.token = services.generateToken(newUser._id);
-            req.body.username = newUser.username;
+            req.body.id = newUser._id;
           })
           .catch(err => console.log(err));
 

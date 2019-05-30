@@ -3,11 +3,23 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 exports.registerUser = (req, res) => {
-  return res.status(200).json({username: req.body.email, token: req.body.token});
+  return res.status(200).json({id: req.body.id, token: req.body.token});
 };
 
 exports.logInUser = (req, res) => {
-  return res.status(200).json({username: req.body.email, token: req.body.token});
+  User.UserModel.findOne({username: req.body.email})
+    .exec()
+    .then(user => res.status(200).send({id: user._id, token: req.body.token, role: req.body.role}))
+    .catch(err => res.status(500).json('this user doesnt exist'));
+};
+
+exports.checkAuth = (req, res) => {
+  return res.status(200).json(true);
+}
+
+exports.logOutUser = (req, res) => {
+  req.logout();
+  res.send('i logged out');
 };
 
 exports.getUsers = (req, res) => {

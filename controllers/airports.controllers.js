@@ -1,4 +1,5 @@
 const Airport = require("../models/airport.model");
+const Flight = require("../models/flight.model");
 
 exports.addAirport = (req, res) => {
   const airport = new Airport.AirportModel(req.body)

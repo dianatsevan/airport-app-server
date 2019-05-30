@@ -5,7 +5,12 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 require('./config/passport/index');
 
-mongoose.connect('mongodb://localhost:27017/airport-app', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://dianatsevan:dianatsevan@airport-app-8zodm.mongodb.net/airport-app?retryWrites=true', { useNewUrlParser: true })
+  .then(() => {
+    console.log('connected successfully');
+  }, (err) => {
+    console.log('connection failure');
+  });
 
 const app = express();
 
