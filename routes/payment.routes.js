@@ -5,4 +5,8 @@ const PaymentController = require('../controllers/payment.controllers');
 
 router.post('/pay', PaymentController.createPaymentBill);
 
+router.get('/success', PaymentController.successPayment);
+
+router.get('/cancel', PaymentController.cancelPayment);
+
 module.exports = router;
