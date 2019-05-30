@@ -19,8 +19,8 @@ exports.createPaymentBill = (req, res) => {
 };
 
 exports.successPayment = (req, res) => {
-  const paymentId = req.body[0].paymentId;
-  const execute_payment_json = req.body[1];
+  const paymentId = req.body.paymentId;
+  const execute_payment_json = req.body.executePaymentObject;
 
   paypal.payment.execute(paymentId, execute_payment_json, (error, payment) => {
     if (error) {

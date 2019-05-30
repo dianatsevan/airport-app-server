@@ -21,14 +21,14 @@ exports.getFlights = (req, res) => {
 
   let filter = {};
 
-  if (fromCountry && toCountry) {
-    filter = { fromCountry, toCountry };
-  }
   if (fromCountry) {
     filter = { fromCountry };
   }
   if (toCountry) {
     filter = { toCountry };
+  }
+  if (fromCountry && toCountry) {
+    filter = { fromCountry, toCountry };
   }
   if (planeInfo) {
     filter = { planeInfo };
