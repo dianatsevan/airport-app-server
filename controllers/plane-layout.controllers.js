@@ -31,7 +31,7 @@ exports.updatePlaneLayout = (req, res) => {
   PlaneLayout.PlaneLayoutModel.findOne({ code: req.body.code })
     .exec()
     .then(planeLayout => {
-      if (planeLayout._id != req.params.id) {
+      if (planeLayout && planeLayout._id != req.params.id) {
         return res.status(500).send('Code duplication');
       }
 

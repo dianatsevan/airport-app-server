@@ -10,7 +10,7 @@ exports.logInUser = (req, res) => {
   User.UserModel.findOne({username: req.body.email})
     .exec()
     .then(user => res.status(200).send({id: user._id, token: req.body.token, role: req.body.role}))
-    .catch(err => res.status(500).json('this user doesnt exist'));
+    .catch(err => res.status(500).send(req.body.message));
 };
 
 exports.checkAuth = (req, res) => {
